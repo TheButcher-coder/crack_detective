@@ -29,3 +29,6 @@ validation_images = tf.keras.utils.image_dataset_from_directory(image_dir,
                                                                 seed=123,
                                                                 image_size=(2880, 2160))
 print("test")
+
+#manually make labels :(
+#train_labels = tf.data.Dataset.from(np.array([]))
