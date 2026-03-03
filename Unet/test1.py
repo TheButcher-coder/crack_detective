@@ -59,7 +59,7 @@ def unet_model(input_shape=(256, 256, 3), num_classes=1):
 
 
 if __name__ == '__main__':
-    model = unet_model(input_shape=(572, 572, 3), num_classes=2)
+    model = unet_model(input_shape=(572, 572, 3), num_classes=4)
     model.summary()
 
 
@@ -67,19 +67,36 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.preprocessing import image
 
-img = Image.open('cat.png').convert('RGB')
+#Palette for different classes in the segmentation image
+palette = np.array([
+    [0, 0, 0],       # Klasse 0: Schwarz
+    [255, 255, 255], #weiß
+    [255, 0, 0],     # Klasse 1: Rot
+    [0, 0, 255],     # Klasse 2: Blau
+], dtype=np.uint8)
+
+img = Image.open('AFXMo04_G_A0_X100_RisseRand.jpg').convert('RGB')
 img = img.resize((572, 572))
 img_array = image.img_to_array(img) / 255.0
 img_array = np.expand_dims(img_array, axis=0)
 
-model = unet_model(input_shape=(572, 572, 3), num_classes=2)
+model = unet_model(input_shape=(572, 572, 3), num_classes=4)
 
 predictions = model.predict(img_array)
 
 pred_mask = np.squeeze(predictions, axis=0)
-pred_mask = np.argmax(pred_mask, axis=-1).astype(np.uint8) * 255
+pred_mask = np.argmax(pred_mask, axis=-1).astype(np.uint8)# * 255
 pred_mask_img = Image.fromarray(pred_mask)
 pred_mask_img = pred_mask_img.resize(img.size)
 
-pred_mask_img.save('predicted_image.jpg')
+pred_mask_img.save('prediction_worse.jpg')
 pred_mask_img.show()
+
+
+pred_mask_colored = palette[pred_mask]
+
+# Speichern oder anzeigen
+from PIL import Image
+colored_image = Image.fromarray(pred_mask_colored)
+colored_image.save('colored_prediction.png')
+colored_image.show()
