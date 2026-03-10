@@ -100,3 +100,13 @@ from PIL import Image
 colored_image = Image.fromarray(pred_mask_colored)
 colored_image.save('colored_prediction.png')
 colored_image.show()
+
+
+#save model:
+#model.save('unet_model.h5')  # Speichert Architektur, Gewichte und Trainingskonfiguration
+
+#you can load it with:
+#model = tf.keras.models.load_model('unet_model.h5')
+
+#and use it with
+#prediction = model.predict(image_array)
